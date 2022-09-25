@@ -1,0 +1,8 @@
+{
+  "name": "Mi Refri",
+  "integrations": {
+    "cordova": {},
+    "capacitor": {}
+  },
+  "type": "angular"
+}

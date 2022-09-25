@@ -1,0 +1,73 @@
+<ion-header translucent mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Finalizar compra</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen mode="ios">
+
+  <form [formGroup]="paymentForm" novalidate (ngSubmit)="finishPayment()">
+    <ion-list-header>Información de entrega</ion-list-header>
+    <ion-card style="margin-top: 9px">
+      <ion-list>
+        <ion-item>
+          <ion-label>Nombre</ion-label>
+          <ion-input formControlName="name" color="primary"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Correo</ion-label>
+          <ion-input formControlName="email" color="primary"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Número de celular</ion-label>
+          <ion-input formControlName="phone" color="primary"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Dirección</ion-label>
+          <ion-input formControlName="address" color="primary"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label>Nota adicional</ion-label>
+          <ion-textarea formControlName="note" color="medium"></ion-textarea>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+    <ion-list-header>Información de compra</ion-list-header>
+    <ion-card style="margin-top: 9px">
+      <ion-list>
+        <ion-radio-group formControlName="paymentType">
+          <ion-list-header>
+            <ion-label style="font-size: 19px;margin-top: 13px;">
+              Método de pago
+            </ion-label>
+          </ion-list-header>
+          <div class="ion-padding-horizontal">
+            <ion-text>Nuestros métodos de pago se encuentran en las preguntas frecuentes. </ion-text>
+            <a [routerLink]="'/pages/support'">Ver métodos de pago</a>
+          </div>
+          <ion-item>
+            <ion-label>Transferencia</ion-label>
+            <ion-radio value="transference"></ion-radio>
+          </ion-item>
+          <ion-item>
+            <ion-label>Efectivo</ion-label>
+            <ion-radio value="effective"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+    </ion-card>
+  </form>
+  <ion-toolbar class="pay-bar">
+    <ion-text class="ion-padding-horizontal" color="medium">Total a pagar</ion-text>
+    <div style="display: flex;">
+      <ion-list-header style="font-size: 30px;">
+        ${{_utilsService.totalPrice() | currency: 'COP': '' : '1.0-0'}}
+      </ion-list-header>
+      <ion-button style="height: 30px;" (click)="finishPayment()" [disabled]="paymentForm.invalid">
+        Finalizar
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-content>

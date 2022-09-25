@@ -1,0 +1,188 @@
+<ion-app mode="ios">
+  <ion-header [translucent]="_utilsService.showHeaderTitle" [ngClass]="{'ion-no-boder': _utilsService.showHeaderTitle}"
+    collapse="fade">
+    <ion-toolbar>
+      <div *ngIf="_utilsService.showHeaderTitle">
+        <ion-title>Inicio</ion-title>
+      </div>
+      <ion-buttons slot="end" style="padding-right: 8px;">
+        <ion-button class="cart-element" routerLink="/pages/menu/cart">
+          <ion-icon name="cart"></ion-icon>
+          <ion-badge color="danger" class="cart-count">{{(_utilsService.cart?.length || 0)}}</ion-badge>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen [scrollEvents]="true" (ionScroll)="_utilsService.showTitlePage($event)" scrollable>
+    <div class="content-full-page">
+      <h1 class="global-titles ion-padding-horizontal ion-no-margin">
+        Inicio
+      </h1><br>
+      <ion-searchbar placeholder="Buscar productos" id="search" showCancelButton="focus" cancelButtonText="Cancelar"
+        animated (keyup)="search($event)" (ionClear)="resetSearch()" (ionCancel)="resetSearch()" inputmode="text"
+        debounce="800"></ion-searchbar>
+
+      <app-skeleton-loading *ngIf="loadingProducts"></app-skeleton-loading>
+
+      <!-- Categorías -->
+      <div id="categories" class="product-category" *ngIf="categories?.length > 0 && !showResults">
+        <ion-slides [options]="slideOptions" pager="true" #slider (ionSlidesDidLoad)="slidesDidLoad(slider)">
+          <ion-slide *ngFor="let category of categories">
+            <ion-card [class]="category?.color" style="width: 100%;" (click)="filterCategory(category?.id)">
+              <ion-card-title>
+                <img class="img-category" [src]="category?.image" [alt]="category?.name">
+                <ion-text color="light">
+                  {{category?.name}}
+                  <!-- <ion-icon name="arrow-forward-circle-outline" class="icon-category"></ion-icon> -->
+                </ion-text>
+              </ion-card-title>
+            </ion-card>
+          </ion-slide>
+        </ion-slides>
+        <ion-buttons class="ion-justify-content-center ion-align-items-center ion-text-center"
+          style="margin-bottom: 15px;" *ngIf="isFilteredByCategory" (click)="getProducts();isFilteredByCategory = false;noResultsFilterByCategory = false">
+          <ion-button fill="outline" shape="round">
+            <ion-icon name="close-circle-outline" style="margin-right: 8px;"></ion-icon>
+            Limipiar filtro
+          </ion-button>
+        </ion-buttons>
+      </div>
+      <!-- Sin resultados de filtro de categoría -->
+      <div class="ion-justify-content-center ion-align-items-center ion-text-center" *ngIf="noResultsFilterByCategory"
+        style="height: 60vh;display: flex; flex-direction: column;">
+        <div style="max-width: 250px;">
+          <img src="assets/img/search.png" alt="Imagen de resultados de búsqueda de Mi Refri">
+        </div>
+        <div class="ion-padding-horizontal">
+          <ion-card-title style="margin-top: 20px;">No se encontraron resultados.</ion-card-title>
+          <p>No se encontró ningún producto con la categoría seleccionada, intenta buscar con otra</p>
+        </div>
+        <ion-buttons>
+          <ion-button (click)="getProducts();noResultsFilterByCategory = false;isFilteredByCategory = false">
+            <h4>Ver productos</h4>
+          </ion-button>
+        </ion-buttons>
+      </div>
+
+      <!-- Todos los resultados -->
+      <ion-infinite-scroll threshold="100px" (ionInfinite)="loadMoreProducts($event)"
+        *ngIf="products?.length > 0 && !showResults">
+        <ion-infinite-scroll-content loadingSpinner="lines" loadingText="Cargando">
+          <div id="products">
+            <ion-grid>
+              <ion-row>
+                <ion-col size-lg="4" size-md="4" *ngFor="let product of products">
+                  <ion-card class="product">
+                    <div class="ion-text-center card-img-product">
+                      <ion-badge class="discount-product" color="danger" *ngIf="product?.is_offert">
+                        -{{math.trunc((product?.price-product?.real_price)*100/product?.price)}}%
+                      </ion-badge>
+                      <ion-spinner name="lines" *ngIf="!product?.image"></ion-spinner>
+                      <img [src]="product?.image" [alt]="product?.name" *ngIf="product?.image">
+                    </div>
+                    <ion-card-content class="product-content ion-text-center">
+                      <ion-card-subtitle class="ion-no-margin">{{product?.name}}</ion-card-subtitle>
+                      <small>
+                        <ion-text color="medium">{{product?.grammage}} g</ion-text>
+                      </small>
+                      <div class="price">
+                        <small *ngIf="product?.is_offert">
+                          <ion-text color="dark" class="sale">${{product?.price}}</ion-text>
+                        </small>
+                        <ion-text color="danger">${{product?.is_offert ? product?.real_price : product?.price}}
+                        </ion-text>
+                      </div>
+                      <div class="count">
+                        <ion-button size="small" *ngIf="_utilsService.countElementOfCart(product?.id) == 0"
+                          (click)="_utilsService.addToCart(product)" style="width: 100%;">Agregar</ion-button>
+                        <div *ngIf="_utilsService.countElementOfCart(product?.id) != 0">
+                          <ion-buttons>
+                            <ion-button (click)="_utilsService.removeCart(product)">
+                              <ion-icon slot="start" name="remove-circle-outline"></ion-icon>
+                            </ion-button>
+                            <ion-text color="medium">{{_utilsService.countElementOfCart(product?.id)}}</ion-text>
+                            <ion-button (click)="_utilsService.addToCart(product)">
+                              <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                            </ion-button>
+                          </ion-buttons>
+                        </div>
+                      </div>
+                    </ion-card-content>
+                  </ion-card>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+        </ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+
+      <!-- Resultados de búsqueda -->
+      <div id="products" *ngIf="showResults">
+        <div class="ion-justify-content-center ion-align-items-center ion-text-center" *ngIf="loadingSearch"
+          style="height: 60vh;display: flex; flex-direction: column;">
+          <ion-spinner name="lines"></ion-spinner>
+          <div>Cargando</div>
+        </div>
+        <ion-grid *ngIf="results?.length > 0 && !loadingSearch">
+          <ion-row>
+            <ion-col size-lg="4" size-md="4" *ngFor="let product of results">
+              <ion-card class="product">
+                <div class="ion-text-center card-img-product">
+                  <ion-badge class="discount-product" color="danger" *ngIf="product?.is_offert">
+                    -{{math.trunc((product?.price-product?.real_price)*100/product?.price)}}%
+                  </ion-badge>
+                  <ion-spinner name="lines" *ngIf="!product?.image"></ion-spinner>
+                  <img [src]="product?.image" [alt]="product?.name" *ngIf="product?.image">
+                </div>
+                <ion-card-content class="product-content ion-text-center">
+                  <ion-card-subtitle class="ion-no-margin">{{product?.name}}</ion-card-subtitle>
+                  <small>
+                    <ion-text color="medium">{{product?.grammage}} g</ion-text>
+                  </small>
+                  <div class="price">
+                    <small *ngIf="product?.is_offert">
+                      <ion-text color="dark" class="sale">${{product?.price}}</ion-text>
+                    </small>
+                    <ion-text color="danger">${{product?.is_offert ? product?.real_price : product?.price}}
+                    </ion-text>
+                  </div>
+                  <div class="count">
+                    <ion-button size="small" *ngIf="_utilsService.countElementOfCart(product?.id) == 0"
+                      (click)="_utilsService.addToCart(product)" style="width: 100%;">Agregar</ion-button>
+                    <div *ngIf="_utilsService.countElementOfCart(product?.id) != 0">
+                      <ion-buttons>
+                        <ion-button (click)="_utilsService.removeCart(product)">
+                          <ion-icon slot="start" name="remove-circle-outline"></ion-icon>
+                        </ion-button>
+                        <ion-text color="medium">{{_utilsService.countElementOfCart(product?.id)}}</ion-text>
+                        <ion-button (click)="_utilsService.addToCart(product)">
+                          <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                        </ion-button>
+                      </ion-buttons>
+                    </div>
+                  </div>
+                </ion-card-content>
+              </ion-card>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+        <div class="ion-justify-content-center ion-align-items-center ion-text-center"
+          *ngIf="results?.length == 0 && !loadingSearch" style="height: 60vh;display: flex; flex-direction: column;">
+          <div style="max-width: 250px;">
+            <img src="assets/img/search.png" alt="Imagen de resultados de búsqueda de Mi Refri">
+          </div>
+          <div class="ion-padding-horizontal">
+            <ion-card-title style="margin-top: 20px;">No se encontraron resultados.</ion-card-title>
+            <p>No se encontró ningún producto con el término de búsqueda "{{searchTerm}}", intenta buscar con otro
+              producto</p>
+          </div>
+          <ion-buttons>
+            <ion-button (click)="resetSearch()">
+              <h4>Ver productos</h4>
+            </ion-button>
+          </ion-buttons>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

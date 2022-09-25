@@ -1,0 +1,36 @@
+<ion-app mode="ios">
+  <ion-content fullscreen>
+    <div class="content-full-page">
+      <div class="main-login ion-justify-content-center ion-align-items-center ion-text-center">
+        <div class="ion-margin">
+          <img src="assets/img/login.png" alt="Imagen de inicio de sesión Mi refri" style="margin-bottom: 30px;">
+          <ion-card-title color="primary">
+            Inicia sesión
+            <!-- con Google o Facebook -->
+          </ion-card-title>
+          <h5>Bienvenido a <b>Mi Refi</b>, aquí encontrás todo lo que necesitas!</h5>
+          <div class="btns-login ion-padding">
+            <div class="btn-google">
+              <button (click)="authWithGoogleAccount()">
+                <ion-icon name="logo-google"></ion-icon>
+                <span>Google</span>
+              </button>
+            </div><br>
+            <!-- <div class="btn-facebook">
+              <button (click)="authWithFacebookAccount()">
+                <ion-icon name="logo-facebook"></ion-icon>
+                <span>Facebook</span>
+              </button>
+            </div> -->
+          </div>
+          <p>
+            <ion-text color="medium">O inicia sin autenticación, </ion-text>
+            <a (click)="start()" tabindex="0" style="cursor: pointer;">
+              <b>ver ofertas</b>
+            </a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

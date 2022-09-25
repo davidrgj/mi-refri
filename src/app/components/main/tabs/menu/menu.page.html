@@ -1,0 +1,162 @@
+<ion-app mode="ios">
+  <ion-header [translucent]="showHeaderTitle" [ngClass]="{'ion-no-boder': showHeaderTitle}" collapse="fade">
+    <ion-toolbar>
+      <ion-title *ngIf="showHeaderTitle">Menú</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen [scrollEvents]="true" (ionScroll)="logScrolling($event)">
+    <div class="content-full-page">
+      <h1 class="global-titles ion-padding-horizontal ion-no-margin">Menú</h1>
+
+      <div>
+        <ion-list-header>Perfil</ion-list-header>
+        <ion-item button *ngIf="showProfileInfo" (click)="profileInfo()">
+          <ion-icon class="component-icon component-icon-primary" name="person" slot="start">
+          </ion-icon>
+          <ion-label>Información de perfil</ion-label>
+        </ion-item>
+        <ion-item button routerLink="cart">
+          <ion-icon class="component-icon component-icon-success" name="cart" slot="start">
+          </ion-icon>
+          <ion-label>Carrito</ion-label>
+        </ion-item>
+        <!-- <ion-item button>
+          <ion-icon class="component-icon component-icon-tertiary" name="checkbox" slot="start">
+          </ion-icon>
+          <ion-label>Historial de compras</ion-label>
+        </ion-item> -->
+        <ion-item button routerLink="dashboard" *ngIf="showManageAdmin && showProfileInfo">
+          <ion-icon class="component-icon component-icon-danger" name="grid" slot="start">
+          </ion-icon>
+          <ion-label>Administrador</ion-label>
+        </ion-item>
+        <div class="ion-padding" *ngIf="showProfileInfo">
+          <ion-buttons>
+            <ion-button (click)="logout()">Cerrar sesión</ion-button>
+          </ion-buttons>
+        </div>
+        <div class="ion-padding" *ngIf="!showProfileInfo">
+          <ion-text color="medium">
+            Inicia sesión para mejorar tu experiencia de compra <a routerLink="/">Iniciar sesión</a>
+          </ion-text>
+        </div>
+      </div>
+      <div class="ion-margin-vertical">
+        <ion-list-header>Personalización</ion-list-header>
+        <ion-item *ngFor="let item of appearance">
+          <ion-icon [class]="'component-icon component-icon-'+ item?.color" [name]="item?.icon" slot="start"></ion-icon>
+          <ion-label>{{item?.name}}</ion-label>
+          <ion-toggle *ngIf="item?.isToggle == 'dark-mode'" slot="end" (ionChange)="changeTheme($event)" color="success"
+            [checked]="isDarkMode">
+          </ion-toggle>
+        </ion-item>
+      </div>
+      <div class="ion-margin-vertical">
+        <ion-list-header>Nosotros</ion-list-header>
+        <ion-item *ngFor="let item of us" button [id]="item?.id"
+          (click)="item?.id == 'rate-us' ? showRateUs() : return;">
+          <ion-icon [class]="'component-icon component-icon-'+ item?.color" [name]="item?.icon" slot="start"></ion-icon>
+          <ion-label>{{item?.name}}</ion-label>
+        </ion-item>
+      </div>
+
+      <!-- Modals -->
+      <ion-modal trigger="privacy-policies" [breakpoints]="[0, 0.9, 1]" [initialBreakpoint]="0.9" mode="ios">
+        <ng-template>
+          <ion-header translucent>
+            <ion-toolbar>
+              <ion-title>Política de privacidad</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="dismiss()">Listo</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content fullscreen>
+            <div class="ion-padding ion-margin-vertical">
+              <ion-card-title color="dark">Política de privacidad Mi refri</ion-card-title>
+              <h4>Actualización del 26 de marzo de 2022.</h4>
+              <div>
+                En la Política de privacidad de DavDev CO, se describe la información en la que se utiliza los datos e
+                información personal.
+                <div class="ion-text-center">
+                  <h1>
+                    <ion-icon name="people" color="primary" style="font-size: 50px;"></ion-icon>
+                  </h1>
+                </div>
+              </div>
+              <h4 color="dark">Autorización.</h4>
+              <div>Al hacer uso de esta aplicación Mi refri, usted aprueba los términos de esta Política de
+                privacidad.</div><br>
+              <h4 color="dark">Información que proporciona.</h4>
+              <div>La aplicación no realiza recopilación de información, tampoco pide información acerca de usted.</div>
+              <br>
+              <h4 color="dark">Cookies.</h4>
+              <div>La utilización de esta aplicación puede implicar la utilización de cookies. Las cookies son pequeñas
+                cantidades de información que se almacenan en el navegador utilizado por cada usuario para que el
+                servidor
+                recuerde cierta información que posteriormente pueda utilizar. Esta información permite identificarle a
+                usted como un usuario concreto y permite guardar sus preferencias personales, así como información
+                técnica
+                como puedan ser visitas o páginas concretas que visite.</div><br>
+              <h4 color="dark">Seguridad</h4>
+              <div>Esta aplicación está compremetida en el manejo de seguridad de la información. Ya que no se recopila
+                información, ni pide información acerca de usted, le reconmedamos tener en cuenta que ninguna trasmisión
+                por internet está completamente segura o libre de errores, por ello, tenga en cuenta el uso que da
+                mientras navega.</div><br>
+              <h4 color="dark">Vínculos con otros sitios web o enlaces.</h4>
+              <div>Esta aplicación puede contener vínculos a otros sitios web, haciendo referencia a los anuncios que se
+                muestran dentro de la misma, a los cuales no se aplica esta Política de privacidad.</div><br>
+              <h4 color="dark">Cambios a esta Política de privacidad.</h4>
+              <div>Si cambia esta Política de privacidad, la política revisada se encontrará en este sitio. Por favor
+                revisarla periódicamente.</div><br>
+              <h4 color="dark">Cómo ponerse en contacto con nosotros.</h4>
+              <div class="ion-margin-bottom">Si tiene preguntas, comentarios, solicitudes, o inquietudes relacionadas
+                con
+                esta Política de privacidad, por favor póngase en contacto con nosotros, vía email en
+                <a href="mailto:davdevco@gmail.com">davdevco@gmail.com</a>.
+              </div><br><br><br><br><br>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+      <ion-modal trigger="about-us" [breakpoints]="[0, 0.9, 1]" [initialBreakpoint]="0.9" mode="ios">
+        <ng-template>
+          <ion-header translucent>
+            <ion-toolbar>
+              <ion-title>Sobre nosotros</ion-title>
+              <ion-buttons slot="end">
+                <ion-button (click)="dismiss()">Listo</ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content fullscreen>
+            <div class="ion-padding ion-margin-vertical">
+              <ion-card-title color="dark">Sobre nosotros DavDev CO</ion-card-title>
+              <h4>Somos una empresa de desarrollo de aplicaciones y software comprometidos con el usuario. Agradecemos
+                sus
+                calificaciones, feedback e interacción con nuestras redes.</h4>
+              <div class="ion-padding-vertical">
+                <ion-list class="theme-list" lines="full">
+                  <!-- <ion-list-header>Redes</ion-list-header> -->
+                  <ion-item button (click)="goToSocialNetwork('instagram')">
+                    <ion-label>Siguenos en Instagram</ion-label>
+                  </ion-item>
+                  <ion-item button (click)="goToSocialNetwork('facebook')">
+                    <ion-label>Siguenos en Facebook</ion-label>
+                  </ion-item>
+                  <ion-item button (click)="goToSocialNetwork('email')">
+                    <ion-label>Contacto vía email</ion-label>
+                  </ion-item>
+                  <ion-item button (click)="goToSocialNetwork('store')">
+                    <ion-label>Más aplicaciones</ion-label>
+                  </ion-item>
+                </ion-list>
+              </div><br><br><br><br>
+            </div><br><br><br><br>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+      <!-- End modals -->
+    </div>
+  </ion-content>
+</ion-app>

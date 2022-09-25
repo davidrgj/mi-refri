@@ -1,0 +1,57 @@
+ion-content {
+    --padding-bottom: 80px;
+}
+
+.offert-card {
+    margin-top: 0px;
+    margin-bottom: 5px;
+
+    .featured-title {
+        padding: 16px 16px 5px 16px;
+    }
+
+    .principal-title {
+        max-width: 60%;
+        padding-bottom: 15px;
+    }
+}
+
+.view-offert {
+    width: 16px;
+    height: 16px;
+    padding: 3px;
+    border: 1px solid;
+    border-radius: 50%;
+}
+
+.count {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 5px;
+
+    button {
+        padding: 0px;
+    }
+}
+
+.price-offert {
+    position: absolute;
+    right: 20px;
+    top: 12px;
+    font-size: 19px;
+}
+
+.sale {
+    text-decoration: line-through;
+    margin-right: 6px;
+}
+
+.product-folder-open {
+    padding: 15px;
+}
+
+.product-col-folder-open {
+    min-width: 100px;
+    max-width: 150px;
+    margin: auto;
+}

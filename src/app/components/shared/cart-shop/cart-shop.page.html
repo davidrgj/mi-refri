@@ -1,0 +1,148 @@
+<ion-app mode="ios">
+  <ion-header [translucent]="_utilsService.showHeaderTitle" [ngClass]="{'ion-no-boder': _utilsService.showHeaderTitle}"
+    collapse="fade">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button text="Menú" style="display: block;" defaultHref="/pages/menu"></ion-back-button>
+      </ion-buttons>
+      <ion-title *ngIf="_utilsService.showHeaderTitle">
+        Carrito
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen [scrollEvents]="true" (ionScroll)="_utilsService.showTitlePage($event)" scrollable>
+    <div class="content-full-page">
+      <h1 class="global-titles ion-padding-horizontal ion-no-margin">Carrito</h1><br>
+      <div *ngIf="_utilsService.cart?.length > 0">
+        <div class="ion-justify-content-center ion-align-items-center" *ngIf="loading"
+          style="height: 60vh;display: flex; flex-direction: column;">
+          <ion-spinner name="lines"></ion-spinner>
+          <div>Cargando</div>
+        </div>
+        <div *ngIf="!loading">
+          <div *ngIf="products?.length > 0">
+            <ion-list-header class="ion-padding-horizontal">Productos</ion-list-header>
+            <ion-item *ngFor="let item of products">
+              <ion-avatar slot="start">
+                <img [src]="item?.image" [alt]="item?.name" />
+              </ion-avatar>
+              <ion-label>
+                <h3>{{item?.name}}</h3>
+                <p>{{item?.description}}</p>
+                <ion-row>
+                  <ion-col class="ion-no-padding">
+                    <span style="font-size: 13px;">
+                      <ion-text color="medium">
+                        Precio c/u:
+                      </ion-text>
+                      ${{item?.is_offert ? item?.real_price : item?.price | currency: 'COP': '' : '1.0-0'}}
+                    </span>
+                  </ion-col>
+                  <ion-col class="ion-no-padding">
+                    <span style="font-size: 13px;">
+                      <ion-text color="medium">
+                        Total:
+                      </ion-text>
+                      ${{item?.is_offert ? (_utilsService.countElementOfCart(item?.id) * item?.real_price) :
+                      (_utilsService.countElementOfCart(item?.id) * item?.price) | currency: 'COP': '' : '1.0-0'}}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-label>
+              <div class="count">
+                <div *ngIf="_utilsService.countElementOfCart(item?.id) != 0">
+                  <ion-buttons>
+                    <ion-button (click)="_utilsService.removeCart(item)">
+                      <ion-icon slot="start" name="remove-circle-outline"></ion-icon>
+                    </ion-button>
+                    <ion-text color="medium">{{_utilsService.countElementOfCart(item?.id)}}</ion-text>
+                    <ion-button (click)="_utilsService.addToCart(item)">
+                      <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                </div>
+              </div>
+            </ion-item>
+            <br>
+          </div>
+          <div *ngIf="offerts?.length > 0">
+            <ion-list-header class="ion-padding-horizontal">Ofertas</ion-list-header>
+            <ion-item *ngFor="let item of offerts">
+              <ion-label>
+                <h3>{{item?.name}}</h3>
+                <p>{{item?.description}}</p>
+                <ion-row>
+                  <ion-col class="ion-no-padding">
+                    <span style="font-size: 13px;">
+                      <ion-text color="medium">
+                        Precio c/u:
+                      </ion-text>
+                      ${{item?.is_offert ? item?.real_price : item?.price | currency: 'COP': '' : '1.0-0'}}
+                    </span>
+                  </ion-col>
+                  <ion-col class="ion-no-padding">
+                    <span style="font-size: 13px;">
+                      <ion-text color="medium">
+                        Total:
+                      </ion-text>
+                      ${{item?.is_offert ? (_utilsService.countElementOfCart(item?.id) * item?.real_price) :
+                      (_utilsService.countElementOfCart(item?.id) * item?.price) | currency: 'COP': '' : '1.0-0'}}
+                    </span>
+                  </ion-col>
+                </ion-row>
+              </ion-label>
+              <div class="count">
+                <div *ngIf="_utilsService.countElementOfCart(item?.id) != 0">
+                  <ion-buttons>
+                    <ion-button (click)="_utilsService.removeCart(item)">
+                      <ion-icon slot="start" name="remove-circle-outline"></ion-icon>
+                    </ion-button>
+                    <ion-text color="medium">{{_utilsService.countElementOfCart(item?.id)}}</ion-text>
+                    <ion-button (click)="_utilsService.addToCart(item)">
+                      <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                    </ion-button>
+                  </ion-buttons>
+                </div>
+              </div>
+            </ion-item>
+          </div>
+
+          <div class="ion-padding">
+            <ion-row class="ion-align-items-center">
+              <ion-col>
+                <h3>
+                  <ion-text color="medium">Total: </ion-text>
+                  <span>${{_utilsService.totalPrice() | currency: 'COP': '' : '1.0-0'}}</span>
+                </h3>
+                <h6 *ngIf="_utilsService.savingPrice() !== 0">
+                  <ion-text color="medium">Su ahorro es de </ion-text>
+                  <ion-text>${{_utilsService.savingPrice() | currency: 'COP': '' : '1.0-0'}}</ion-text>
+                </h6>
+              </ion-col>
+              <ion-col size="4">
+                <div class="ion-justify-content-end" style="display: flex;">
+                  <ion-button style="height: 30px;" (click)="toPay()">Pagar</ion-button>
+                </div>
+              </ion-col>
+            </ion-row>
+          </div>
+        </div>
+      </div>
+      <div class="ion-justify-content-center ion-align-items-center ion-text-center"
+        style="height: 60vh;display: flex; flex-direction: column;" *ngIf="_utilsService.cart?.length == 0">
+        <div style="max-width: 200px;">
+          <img src="assets/img/cart.png" alt="Imagen de carrito de compras de Mi Refri">
+        </div>
+        <div class="ion-padding-horizontal">
+          <ion-card-title style="margin-top: 20px;">Aún no tienes artículos en tu carrito.</ion-card-title>
+          <p>Agrégalos usando el buscador o explorando en nuestras ofertas</p>
+        </div>
+        <ion-buttons>
+          <ion-button routerLink="/pages/offerts">
+            <h4>Iniciar</h4>
+          </ion-button>
+        </ion-buttons>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

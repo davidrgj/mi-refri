@@ -1,0 +1,77 @@
+<ion-header translucent mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Producto</ion-title>
+    <ion-buttons slot="end" *ngIf="showSaveButton && productForm.valid && !productForm.pristine">
+      <ion-button (click)="save()">Guardar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen mode="ios">
+  <form [formGroup]="productForm" novalidate (ngSubmit)="save()">
+    <ion-card>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Categoría</ion-label>
+          <ion-select formControlName="category" (click)="getCategories()" okText="Seleccionar" cancelText="Cerrar"
+            interface="popover">
+            <ion-select-option *ngFor="let category of categories" [value]="category?.id">{{category?.name}}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input formControlName="price" type="number"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Gramaje (g)</ion-label>
+          <ion-input formControlName="grammage" type="number"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-top">
+          <ion-label>Aplica promoción</ion-label>
+          <ion-toggle formControlName="is_offert" color="success" (ionChange)="toggleOffert($event)"></ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="showRealPrice">
+          <ion-label position="floating">Nuevo precio</ion-label>
+          <ion-input formControlName="real_price" type="number"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="description" rows="4" cols="20"></ion-textarea>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+    <ion-card>
+      <ion-list>
+        <ion-item *ngIf="showUploadImage">
+          <ion-buttons slot="start">
+            <ion-button expand="full" (click)="f.click()">Agregar imagen</ion-button>
+          </ion-buttons>
+          <input class="ion-hide" #f type="file" (change)="loadImage($event)" id="file-input"
+            accept="image/png, image/jpeg" formControlName="image">
+        </ion-item>
+        <ion-item *ngIf="showPreviewImg">
+          <ion-grid>
+            <ion-row class="ion-justify-content-center">
+              <ion-spinner name="lines-small" *ngIf="srcImage == ''"></ion-spinner>
+              <ng-container *ngIf="srcImage != ''">
+                <img [src]="srcImage" [alt]="productForm.get('name')?.value" width="150px">
+                <ion-buttons>
+                  <ion-button (click)="removeImage()">
+                    <ion-icon name="remove-circle-outline" color="danger"></ion-icon>
+                  </ion-button>
+                </ion-buttons>
+              </ng-container>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+  </form>
+</ion-content>

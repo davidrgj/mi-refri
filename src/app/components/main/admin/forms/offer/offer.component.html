@@ -1,0 +1,63 @@
+<ion-header translucent mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">Cancelar</ion-button>
+    </ion-buttons>
+    <ion-title>Oferta</ion-title>
+    <ion-buttons slot="end"
+      *ngIf="showSaveButton && offertForm.valid && productsControls?.length > 0 && !offertForm.pristine">
+      <ion-button (click)="save()">Guardar</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen mode="ios">
+  <form [formGroup]="offertForm" novalidate (ngSubmit)="save()">
+    <ion-card>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">Nombre</ion-label>
+          <ion-input formControlName="name"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Precio</ion-label>
+          <ion-input formControlName="price" type="number"></ion-input>
+        </ion-item>
+        <ion-item class="ion-padding-top">
+          <ion-label>Aplica promoción</ion-label>
+          <ion-toggle formControlName="is_offert" color="success" (ionChange)="toggleOffert($event)"></ion-toggle>
+        </ion-item>
+        <ion-item *ngIf="showRealPrice">
+          <ion-label position="floating">Nuevo precio</ion-label>
+          <ion-input formControlName="real_price" type="number"></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Descripción</ion-label>
+          <ion-textarea formControlName="description" rows="6" cols="20"></ion-textarea>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+    <ion-list-header><small>Productos</small></ion-list-header>
+    <ion-card>
+      <div class="ion-text-center ion-padding" *ngIf="productsControls?.length < productsData?.length">
+        <ion-chip color="primary" (click)="addProduct()">
+          <ion-icon name="add-circle-outline"></ion-icon>
+          <ion-label>Agregar producto</ion-label>
+        </ion-chip>
+      </div>
+      <ion-list formArrayName="products">
+        <ion-item *ngFor="let product of productsControls; let i = index">
+          <ion-label>Producto {{i+1}}</ion-label>
+          <ion-select [formControlName]="i" (ionChange)="validateProduct(product)" okText="Seleccionar"
+            cancelText="Cerrar" interface="popover">
+            <ion-select-option *ngFor="let productItem of productsData" [value]="productItem?.id">
+              {{productItem?.name}}
+            </ion-select-option>
+          </ion-select>
+          <ion-button fill="clear" color="danger" slot="end" (click)="removeProduct(i)">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ion-card>
+  </form>
+</ion-content>

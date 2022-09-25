@@ -1,0 +1,56 @@
+<ion-header translucent mode="ios">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="dismissModal()">Cerrar</ion-button>
+    </ion-buttons>
+    <ion-title>Información de perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content fullscreen mode="ios">
+  <div class="content-max-width">
+    <div style="margin-top: 40px;">
+      <div class="ion-margin-vertical">
+        <ion-avatar class="avatar-profile">
+          <img [alt]="'Foto de ' + userData?.user?.displayName" [src]="userData?.user?.photoURL ? userData?.user?.photoURL : 'assets/img/default-avatar.jpg'" onerror="this.src='/assets/img/default-avatar.jpg'" />
+        </ion-avatar>
+      </div>
+      <h2 class="ion-text-center" style="font-weight: 700;">
+        {{userData?.user?.displayName}}
+      </h2>
+    </div>
+
+    <div style="margin-top: 25px">
+      <ion-list>
+        <ion-item>
+          <ion-label>Correo</ion-label>
+          <ion-label color="primary" class="text-right">{{userData?.user?.email}}</ion-label>
+        </ion-item>
+        <ion-item *ngIf="userData?.user?.providerData[0]?.phoneNumber">
+          <ion-label>Número de celular</ion-label>
+          <ion-label color="primary" class="text-right">{{userData?.user?.providerData[0]?.phoneNumber}}</ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Última sesión</ion-label>
+          <ion-label color="primary" class="text-right">
+            {{userData?.user?.lastLoginAt | date : 'EEEE d MMMM, y' | titlecase}}
+          </ion-label>
+        </ion-item>
+        <ion-item>
+          <ion-label>Correo verificado</ion-label>
+          <ion-label [color]="userData?.user?.emailVerified === true ? 'primary' : 'danger'" class="text-right">
+            {{userData?.user?.emailVerified === true ? 'Verificado' : 'No verificado' }}
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </div>
+    <div class="ion-padding">
+      <ion-text color="medium">
+        Estos datos están basados en la información que suministraste a Google LLC (Cuenta de correo electrónico Gmail).
+        Puedes gestionar esta información en
+        <a href="https://myaccount.google.com/" target="_blank" rel="noopener noreferrer">
+          Administra tu cuenta Google
+        </a>
+      </ion-text>
+    </div>
+  </div>
+</ion-content>

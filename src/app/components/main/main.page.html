@@ -1,0 +1,24 @@
+<ion-tabs (ionTabsDidChange)="setCurrentTab($event)" mode="ios">
+  <ion-tab-bar slot="bottom" [translucent]="true">
+    <ion-tab-button tab="home">
+      <!-- <ion-icon [name]="current_tab == 'home' ? 'home-outline' : 'home-outline'"></ion-icon> -->
+      <ion-icon [name]="current_tab == 'logo-buffer' ? 'logo-buffer' : 'logo-buffer'" class="icon-padding-custom"></ion-icon>
+      <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="offerts">
+      <ion-icon [name]="current_tab == 'offerts' ? 'pricetags' : 'pricetags-outline'" class="icon-padding-custom"></ion-icon>
+      <ion-label>Ofertas</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="support">
+      <ion-icon [name]="current_tab == 'support' ? 'help-circle' : 'help-circle-outline'"></ion-icon>
+      <ion-label>Soporte</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="menu">
+      <ion-icon [name]="current_tab == 'menu' ? 'cog' : 'cog-outline'"></ion-icon>
+      <ion-label>Menú</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

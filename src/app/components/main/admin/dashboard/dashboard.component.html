@@ -1,0 +1,29 @@
+<ion-app mode="ios">
+  <ion-header [translucent]="showHeaderTitle" [ngClass]="{'ion-no-boder': showHeaderTitle}" collapse="fade" mode="ios">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button text="Menú" style="display: block;" defaultHref="/pages/menu"></ion-back-button>
+      </ion-buttons>
+      <div *ngIf="showHeaderTitle">
+        <ion-title>Panel de administrador</ion-title>
+      </div>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen [scrollEvents]="true" (ionScroll)="logScrolling($event)" mode="ios">
+    <div class="content-full-page">
+      <h1 class="global-titles ion-padding-horizontal ion-no-margin">Panel de administrador</h1>
+      <div class="ion-padding-vertical">
+        <ion-list-header>Gestión de tienda</ion-list-header>
+        <ion-item *ngFor="let item of storeManagementList" button (click)="entryComponent(item)">
+          <ion-label>{{item?.name}}</ion-label>
+        </ion-item>
+      </div>
+      <div class="ion-padding-vertical">
+        <ion-list-header>Gestión de pedidos</ion-list-header>
+        <ion-item button routerLink="/pages/menu/order">
+          <ion-label>Pedidos</ion-label>
+        </ion-item>        
+      </div>
+    </div>
+  </ion-content>
+</ion-app>

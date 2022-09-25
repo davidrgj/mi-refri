@@ -1,0 +1,67 @@
+<ion-app mode="ios">
+  <ion-header [translucent]="_utilsService.showHeaderTitle" [ngClass]="{'ion-no-boder': _utilsService.showHeaderTitle}"
+    collapse="fade">
+    <ion-toolbar>
+      <ion-title *ngIf="_utilsService.showHeaderTitle">
+        Soporte
+      </ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content fullscreen [scrollEvents]="true" (ionScroll)="_utilsService.showTitlePage($event)" scrollable>
+    <div class="content-full-page">
+      <h1 class="global-titles ion-padding-horizontal ion-no-margin">Soporte</h1><br>
+
+      <div>
+        <div class="ion-text-center" style="max-width: 230px;margin: auto;">
+          <img src="assets/img/support.png" alt="Imagen de soporte">
+        </div>
+        <h4 class="ion-text-center">
+          <ion-text color="primary">¿Necesitas ayuda?</ion-text>
+        </h4>
+        <div class="ion-text-center">
+          <h6>Te brindaremos la mejor ayuda!</h6>
+          <ion-chip color="success" (click)="sendSupport('whatsapp')">
+            <ion-icon name="logo-whatsapp"></ion-icon>
+            <ion-label color="success">Whatsapp</ion-label>
+          </ion-chip>
+        </div>
+        <ion-list-header class="ion-padding-horizontal">Preguntas frecuentes</ion-list-header>
+        <div class="ion-padding">
+
+          <ion-fab vertical="bottom" horizontal="end" slot="fixed" edge style="position: fixed;bottom: 60px;">
+            <ion-fab-button color="primary">
+              <ion-icon name="compass"></ion-icon>
+            </ion-fab-button>
+            <ion-fab-list side="top">
+              <ion-fab-button color="success" (click)="sendSupport('whatsapp')">
+                <ion-icon name="logo-whatsapp"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button color="tertiary" (click)="sendSupport('instagram')">
+                <ion-icon name="logo-instagram"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button color="primary" (click)="sendSupport('facebook')">
+                <ion-icon name="logo-facebook"></ion-icon>
+              </ion-fab-button>
+              <ion-fab-button color="secondary" (click)="sendSupport('google')">
+                <ion-icon name="logo-google"></ion-icon>
+              </ion-fab-button>
+            </ion-fab-list>
+          </ion-fab>
+
+          <ion-accordion-group>
+            <ion-accordion *ngFor="let q of questions">
+              <ion-item slot="header" color="light">
+                <ion-label>{{q?.question}}</ion-label>
+              </ion-item>
+              <div class="ion-padding" slot="content">
+                <ul>
+                  <li *ngFor="let a of q?.answer">{{a}}</li>
+                </ul>
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-app>
