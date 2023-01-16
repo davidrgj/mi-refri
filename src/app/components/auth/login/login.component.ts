@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserCredential } from 'firebase/auth';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -23,20 +23,23 @@ export class LoginComponent implements OnInit {
   start = () => (this.router.navigateByUrl('/pages/offerts'));
 
   authWithGoogleAccount() {
-    this._authService.authWithGoogleAccount().then((value: UserCredential) => {
-      localStorage.setItem('user', JSON.stringify(value));
+    this._authService.authWithGoogleAccount().then(response => {
+      console.log("A");
+      console.log(response);
+      localStorage.setItem('user', JSON.stringify(response));
       localStorage.setItem('isAuth', 'true');
       localStorage.setItem('login', 'google');
       this.router.navigateByUrl('/pages/home');
     });
+
   }
 
-  authWithFacebookAccount() {
+  /* authWithFacebookAccount() {
     this._authService.authWithFacebookAccount().then((value: UserCredential) => {
       localStorage.setItem('user', JSON.stringify(value));
       localStorage.setItem('isAuth', 'true');
       localStorage.setItem('login', 'facebook');
       this.router.navigateByUrl('/pages/home');
     })
-  }
+  } */
 }
