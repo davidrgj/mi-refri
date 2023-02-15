@@ -3,13 +3,48 @@
     <div class="content-full-page">
       <div class="main-login ion-justify-content-center ion-align-items-center ion-text-center">
         <div class="ion-margin">
-          <img src="assets/img/login.png" alt="Imagen de inicio de sesión Mi refri" style="margin-bottom: 30px;">
-          <ion-card-title color="primary">
+          <img src="assets/img/login.png" alt="Imagen de inicio de sesión Mi refri">
+          <ion-card-title>
             Inicia sesión
             <!-- con Google o Facebook -->
           </ion-card-title>
-          <h5>Bienvenido a <b>Mi Refi</b>, aquí encontrás todo lo que necesitas!</h5>
-          <div class="btns-login ion-padding">
+          <h5 class="ion-padding-horizontal" style="margin-bottom: 0px;">
+            Bienvenido a <b>Mi Refi</b>, aquí encontrás todo lo que necesitas!
+          </h5>
+          <div class="btns-login ion-padding-horizontal">
+            <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+              <ion-list>
+                <ion-item role="group">
+                  <ion-label position="floating">Correo</ion-label>
+                  <ion-input formControlName="email" type="email" placeholder="email@gmail.com"></ion-input>
+                </ion-item>
+                <div class="ion-text-start ion-padding-horizontal" style="padding-top: 5px;"
+                  *ngIf="loginForm.controls['email'].invalid && (loginForm.controls['email'].dirty || loginForm.controls['email'].touched)">
+                  <small *ngIf="loginForm.controls['email'].errors.required">
+                    <ion-text color="danger">Por favor, ingresa el correo electrónico de tu cuenta de Google</ion-text>
+                  </small>
+                  <small *ngIf="loginForm.controls['email'].errors.pattern">
+                    <ion-text color="danger">
+                      Por favor, ingresa un correo electrónico de Google válido (@gmail.com)
+                    </ion-text>
+                  </small>
+                </div>
+                <ion-item role="group" *ngIf="loginForm.controls['email'].valid">
+                  <ion-label position="floating">Contraseña</ion-label>
+                  <ion-input formControlName="password" type="password" placeholder="*******"></ion-input>                  
+                </ion-item>
+                <div class="ion-text-start ion-padding-horizontal" style="padding-top: 5px;"
+                  *ngIf="loginForm.controls['email'].valid && loginForm.controls['password'].invalid && (loginForm.controls['password'].dirty || loginForm.controls['password'].touched)">
+                  <small *ngIf="loginForm.controls['password'].errors.required">
+                    <ion-text color="danger">Por favor, ingresa la contraseña</ion-text>
+                  </small>
+                </div>
+              </ion-list>
+              <ion-button [disabled]="!loginForm.valid" *ngIf="loginForm.valid"
+                style="margin-top: 15px;padding: 5px;" (click)="login()">
+                Ingresar
+              </ion-button>
+            </form>
             <div class="btn-google">
               <button (click)="authWithGoogleAccount()">
                 <ion-icon name="logo-google"></ion-icon>

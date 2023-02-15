@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { signInWithEmailAndPassword } from '@angular/fire/auth';
 // import { Router } from '@angular/router';
 
 // Firebase auth services
-
 // import { Auth, getAuth, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider, indexedDBLocalPersistence } from '@angular/fire/auth';
 
 
@@ -26,6 +26,12 @@ export class AuthService {
     // public _ngFireAuth: AngularFireAuth,
     // private router: Router
   ) { }
+
+  authWithAccountPassword(data) {
+    const auth = getAuth();
+    return signInWithEmailAndPassword(auth, data.email, data.password).
+      then(() => getRedirectResult(auth)).then((result) => result);
+  }
 
   authWithGoogleAccount() {
     /* var auth = getAuth();

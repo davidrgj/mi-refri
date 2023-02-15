@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { map } from 'rxjs/operators';
 
-import { AdMob } from '@admob-plus/ionic/ngx';
+import { AdMob, NativeAd } from '@admob-plus/ionic/ngx';
 import { Platform } from '@ionic/angular';
 
 import { Offert } from 'src/app/interfaces/offert.interface';
@@ -16,7 +16,7 @@ import { OffertService } from 'src/app/services/main/pages/offert.service';
   templateUrl: './offerts.page.html',
   styleUrls: ['./offerts.page.scss'],
 })
-export class OffertsPage implements OnInit {
+export class OffertsPage implements OnInit, OnDestroy {
 
   offerts: any[] = [];
   loadingOfferts: boolean = true;
@@ -27,6 +27,8 @@ export class OffertsPage implements OnInit {
   showResults: boolean = false;
   loadingSearch: boolean = false;
 
+  adNative: NativeAd;
+
   constructor(
     private _platform: Platform,
     private _admob: AdMob,
@@ -35,18 +37,18 @@ export class OffertsPage implements OnInit {
     private _utilsService: UtilsService
   ) {
     this._platform.ready().then(async () => {
-      const adNative = new this._admob.NativeAd({
+      this.adNative = new this._admob.NativeAd({
         adUnitId: 'ca-app-pub-9891779926883848/6012300739',
       })
 
-      await adNative.load();
-
-      await adNative.show({
-        x: 60,
-        y: 410,
+      await this.adNative.load();
+      await this.adNative.show({
+        x: 0,
+        y: 420,
         width: window.screen.width,
-        height: 175,
-      })
+        height: 35,
+      });
+
     })
   }
 
@@ -106,5 +108,9 @@ export class OffertsPage implements OnInit {
       if (!el.image) { return null }
       return this._productService.getImage(el.image).then(src => src ? el.image = src : el.image = null).catch(() => el.image = null);
     });
+  }
+
+  async ngOnDestroy() {
+    this._platform.ready().then(async () => await this.adNative.hide());
   }
 }
